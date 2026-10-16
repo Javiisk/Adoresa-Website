@@ -5,20 +5,469 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adoresa Container Builder</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       background: #1e1f22;
-      color: #fff;
-      padding: 20px;
-      max-width: 700px;
-      margin: 0 auto;
+      color: #dbdee1;
+      margin: 0;
+      padding: 16px;
+      line-height: 1.5;
     }
-    h1 { color: #5865F2; }
-    p { color: #b5bac1; }
+    h1 {
+      color: #5865F2;
+      font-size: 22px;
+      margin: 0 0 4px 0;
+    }
+    .subtitle {
+      color: #949ba4;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .section {
+      background: #2b2d31;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .section h2 {
+      font-size: 14px;
+      color: #b5bac1;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: #b5bac1;
+      margin-bottom: 4px;
+    }
+    input[type="text"],
+    input[type="url"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 9px 11px;
+      background: #1e1f22;
+      border: 1px solid #3a3c42;
+      border-radius: 6px;
+      color: #dbdee1;
+      font-family: inherit;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #5865F2;
+    }
+    button {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: #5865F2;
+      color: white;
+    }
+    .btn-success {
+      background: #248046;
+      color: white;
+    }
+    .btn-danger {
+      background: #da373c;
+      color: white;
+    }
+    .btn-secondary {
+      background: #4e5058;
+      color: white;
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .color-picker {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .color-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s;
+    }
+    .color-dot:hover {
+      transform: scale(1.1);
+    }
+    .color-dot.selected {
+      border-color: #ffffff;
+    }
+    .color-dot.none {
+      background: #1e1f22;
+      border: 2px dashed #4e5058;
+      position: relative;
+    }
+    .color-dot.none::after {
+      content: "✕";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      color: #949ba4;
+    }
+    /* ─── PREVIEW ─────────────────────────────────────────── */
+    .preview-area {
+      background: #313338;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+    .preview-container {
+      background: #2b2d31;
+      border-radius: 8px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-container.accent {
+      border-left: 4px solid var(--accent, transparent);
+    }
+    .preview-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f2f3f5;
+      margin-bottom: 8px;
+    }
+    .preview-divider {
+      height: 1px;
+      background: #3f4147;
+      margin: 12px 0;
+    }
+    .preview-divider.large {
+      margin: 16px 0;
+    }
+    .preview-text {
+      font-size: 14px;
+      color: #dbdee1;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .preview-image {
+      width: 100%;
+      border-radius: 6px;
+      margin: 8px 0;
+      display: block;
+    }
+    .preview-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #4e5058;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+    .empty-preview {
+      color: #6d6f78;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
+
   <h1>🧱 Adoresa Container Builder</h1>
-  <p>Funcionando correctamente. Aquí irá el editor.</p>
+  <div class="subtitle">Construye tu container V2 en tiempo real</div>
+
+  <!-- ─── TITLE ─────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Title</h2>
+    <input type="text" id="title" placeholder="Escribe el título..." maxlength="100">
+  </div>
+
+  <!-- ─── COLOR ─────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Color</h2>
+    <div class="color-picker" id="colorPicker">
+      <div class="color-dot none selected" data-color="none" title="None"></div>
+      <div class="color-dot" data-color="#ED4245" style="background:#ED4245" title="Red"></div>
+      <div class="color-dot" data-color="#57F287" style="background:#57F287" title="Green"></div>
+      <div class="color-dot" data-color="#5865F2" style="background:#5865F2" title="Blue"></div>
+      <div class="color-dot" data-color="#FEE75C" style="background:#FEE75C" title="Yellow"></div>
+      <div class="color-dot" data-color="#9B59B6" style="background:#9B59B6" title="Purple"></div>
+      <div class="color-dot" data-color="#000000" style="background:#000000" title="Black"></div>
+      <div class="color-dot" data-color="#FFFFFF" style="background:#FFFFFF" title="White"></div>
+    </div>
+  </div>
+
+  <!-- ─── TEXT BLOCKS ───────────────────────────────────── -->
+  <div class="section">
+    <h2>Text Blocks</h2>
+    <div id="textBlocks"></div>
+    <button class="btn-primary" onclick="addTextBlock()">➕ Add Text Block</button>
+  </div>
+
+  <!-- ─── IMAGE ─────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Image</h2>
+    <label>Image URL (https://...)</label>
+    <input type="url" id="imageUrl" placeholder="https://ejemplo.com/imagen.png">
+  </div>
+
+  <!-- ─── BUTTON ────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Button (optional)</h2>
+    <label>Label</label>
+    <input type="text" id="buttonLabel" placeholder="Appeal a moderation" maxlength="80">
+    <label>URL</label>
+    <input type="url" id="buttonUrl" placeholder="https://discord.gg/...">
+  </div>
+
+  <!-- ─── PREVIEW ───────────────────────────────────────── -->
+  <div class="section">
+    <h2>Preview</h2>
+    <div class="preview-area">
+      <div class="preview-container" id="previewContainer">
+        <div class="empty-preview">Escribe algo para ver el preview...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ACTIONS ───────────────────────────────────────── -->
+  <div class="section">
+    <div class="btn-row">
+      <button class="btn-success" onclick="generateJSON()">📤 Generate JSON</button>
+      <button class="btn-danger" onclick="resetAll()">🗑️ Reset</button>
+    </div>
+    <textarea id="jsonOutput" style="margin-top:12px; display:none" readonly placeholder="El JSON aparecerá aquí..."></textarea>
+  </div>
+
+  <script>
+    // ─── STATE ───────────────────────────────────────────
+    const state = {
+      title: '',
+      color: 'none',
+      texts: [],
+      imageUrl: '',
+      buttonLabel: '',
+      buttonUrl: '',
+    };
+
+    // ─── TEXT BLOCKS ─────────────────────────────────────
+    function addTextBlock() {
+      state.texts.push('');
+      renderTextBlocks();
+      renderPreview();
+    }
+
+    function removeTextBlock(index) {
+      state.texts.splice(index, 1);
+      renderTextBlocks();
+      renderPreview();
+    }
+
+    function updateTextBlock(index, value) {
+      state.texts[index] = value;
+      renderPreview();
+    }
+
+    function renderTextBlocks() {
+      const container = document.getElementById('textBlocks');
+      container.innerHTML = '';
+      state.texts.forEach((text, i) => {
+        const wrap = document.createElement('div');
+        wrap.style.marginBottom = '10px';
+        wrap.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px">
+            <label>Block ${i + 1}</label>
+            <button class="btn-danger" style="padding:4px 10px; font-size:12px" onclick="removeTextBlock(${i})">Remove</button>
+          </div>
+          <textarea placeholder="Texto del bloque ${i + 1}..." oninput="updateTextBlock(${i}, this.value)">${escapeHtml(text)}</textarea>
+        `;
+        container.appendChild(wrap);
+      });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ─── COLOR ───────────────────────────────────────────
+    document.querySelectorAll('.color-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+        dot.classList.add('selected');
+        state.color = dot.dataset.color;
+        renderPreview();
+      });
+    });
+
+    // ─── INPUT LISTENERS ─────────────────────────────────
+    document.getElementById('title').addEventListener('input', e => {
+      state.title = e.target.value;
+      renderPreview();
+    });
+    document.getElementById('imageUrl').addEventListener('input', e => {
+      state.imageUrl = e.target.value;
+      renderPreview();
+    });
+    document.getElementById('buttonLabel').addEventListener('input', e => {
+      state.buttonLabel = e.target.value;
+      renderPreview();
+    });
+    document.getElementById('buttonUrl').addEventListener('input', e => {
+      state.buttonUrl = e.target.value;
+      renderPreview();
+    });
+
+    // ─── PREVIEW ─────────────────────────────────────────
+    function renderPreview() {
+      const container = document.getElementById('previewContainer');
+
+      // Accent color
+      if (state.color === 'none') {
+        container.style.setProperty('--accent', 'transparent');
+        container.classList.remove('accent');
+      } else {
+        container.style.setProperty('--accent', state.color);
+        container.classList.add('accent');
+      }
+
+      let html = '';
+
+      // Title
+      if (state.title.trim()) {
+        html += `<div class="preview-title">${escapeHtml(state.title)}</div>`;
+        html += `<div class="preview-divider"></div>`;
+      }
+
+      // Image
+      if (state.imageUrl.trim()) {
+        html += `<img class="preview-image" src="${escapeHtml(state.imageUrl)}" onerror="this.style.display='none'">`;
+        html += `<div class="preview-divider"></div>`;
+      }
+
+      // Text blocks
+      state.texts.forEach((text, i) => {
+        if (!text.trim()) return;
+        html += `<div class="preview-text">${escapeHtml(text)}</div>`;
+        if (i < state.texts.length - 1) {
+          html += `<div class="preview-divider"></div>`;
+        }
+      });
+
+      // Button
+      if (state.buttonLabel.trim() && state.buttonUrl.trim()) {
+        html += `<div class="preview-divider"></div>`;
+        html += `<a class="preview-button" href="${escapeHtml(state.buttonUrl)}" target="_blank">${escapeHtml(state.buttonLabel)} ↗</a>`;
+      }
+
+      if (!html) {
+        container.innerHTML = '<div class="empty-preview">Escribe algo para ver el preview...</div>';
+      } else {
+        container.innerHTML = html;
+      }
+    }
+
+    // ─── GENERATE JSON ───────────────────────────────────
+    function generateJSON() {
+      const components = [];
+
+      // Text displays
+      if (state.title.trim()) {
+        components.push({ type: 10, content: `## ${state.title}` });
+        components.push({ type: 14, spacing: 2 });
+      }
+
+      if (state.imageUrl.trim()) {
+        components.push({
+          type: 12,
+          items: [{ media: { url: state.imageUrl } }],
+        });
+        components.push({ type: 14, spacing: 2 });
+      }
+
+      state.texts.forEach(text => {
+        if (text.trim()) {
+          components.push({ type: 10, content: text });
+          components.push({ type: 14, spacing: 2 });
+        }
+      });
+
+      if (state.buttonLabel.trim() && state.buttonUrl.trim()) {
+        components.push({
+          type: 1,
+          components: [{
+            type: 2,
+            style: 5,
+            label: state.buttonLabel,
+            url: state.buttonUrl,
+          }],
+        });
+      }
+
+      const json = {
+        accent_color: state.color === 'none' ? null : state.color,
+        components: [{ type: 17, components }],
+      };
+
+      const output = document.getElementById('jsonOutput');
+      output.style.display = 'block';
+      output.value = JSON.stringify(json, null, 2);
+      output.select();
+      document.execCommand('copy');
+      alert('✅ JSON copiado al portapapeles');
+    }
+
+    // ─── RESET ───────────────────────────────────────────
+    function resetAll() {
+      if (!confirm('¿Borrar todo el contenido?')) return;
+      state.title = '';
+      state.color = 'none';
+      state.texts = [];
+      state.imageUrl = '';
+      state.buttonLabel = '';
+      state.buttonUrl = '';
+
+      document.getElementById('title').value = '';
+      document.getElementById('imageUrl').value = '';
+      document.getElementById('buttonLabel').value = '';
+      document.getElementById('buttonUrl').value = '';
+      document.getElementById('jsonOutput').style.display = 'none';
+
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+      document.querySelector('.color-dot.none').classList.add('selected');
+
+      renderTextBlocks();
+      renderPreview();
+    }
+
+    // ─── INIT ────────────────────────────────────────────
+    renderTextBlocks();
+    renderPreview();
+  </script>
+
 </body>
 </html>
