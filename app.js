@@ -84,7 +84,6 @@ function buildContainerEl(msgIdx, cont, contIdx) {
   const body = document.createElement('div');
   body.className = 'container-body' + (cont.open ? ' open' : '');
 
-  // Color
   const colorDiv = document.createElement('div');
   colorDiv.innerHTML = `
     <label>Sidebar Color</label>
@@ -96,7 +95,6 @@ function buildContainerEl(msgIdx, cont, contIdx) {
   `;
   body.appendChild(colorDiv);
 
-  // Components
   cont.components.forEach((comp, compIdx) => {
     body.appendChild(buildComponentEl(msgIdx, contIdx, comp, compIdx));
   });
@@ -442,4 +440,10 @@ async function loadChannels() {
 
 // ─── INIT ───────────────────────────────────────────────
 document.getElementById('password').addEventListener('blur', loadChannels);
-render();
+
+// Wait for DOM to be ready before initial render
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', render);
+} else {
+  render();
+}
