@@ -8,95 +8,38 @@
 </head>
 <body>
 
-  <!-- ─── LOGIN SCREEN ───────────────────────────────────── -->
-  <div id="loginScreen" class="screen active">
-    <div class="login-box">
-      <h1>🧱 Adoresa Container Builder</h1>
-      <p class="subtitle">Enter password to continue</p>
-      <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password">
-      <button id="loginBtn" class="btn-primary">Login</button>
-      <p id="loginError" class="error"></p>
+  <header class="topbar">
+    <span class="logo">🧱 Adoresa Builder</span>
+  </header>
+
+  <main class="main">
+
+    <div id="messagesContainer"></div>
+
+    <button class="btn-add-message" onclick="addMessage()">
+      <span>💬</span> Add Message
+    </button>
+
+    <div class="section" style="margin-top:20px">
+      <h2>Send to Channel</h2>
+      <input type="password" id="password" placeholder="Password">
+      <select id="channelSelect" style="margin-top:8px">
+        <option value="">Enter password first</option>
+      </select>
+      <button class="btn-success" id="sendBtn" style="margin-top:8px" onclick="sendToDiscord()">
+        📤 Send to Discord
+      </button>
+      <p id="sendStatus" class="status"></p>
     </div>
-  </div>
 
-  <!-- ─── EDITOR SCREEN ──────────────────────────────────── -->
-  <div id="editorScreen" class="screen">
-    <header class="topbar">
-      <span class="logo">🧱 Adoresa Builder</span>
-      <div class="topbar-right">
-        <button id="logoutBtn" class="btn-secondary">Logout</button>
-      </div>
-    </header>
+    <div class="section">
+      <h2>JSON Output</h2>
+      <textarea id="jsonOutput" readonly rows="10"></textarea>
+      <button class="btn-secondary" onclick="copyJson()">📋 Copy JSON</button>
+      <p id="copyStatus" class="status"></p>
+    </div>
 
-    <main class="main">
-
-      <!-- Title -->
-      <div class="section">
-        <h2>Title</h2>
-        <input type="text" id="title" placeholder="Título del container..." maxlength="100">
-      </div>
-
-      <!-- Color -->
-      <div class="section">
-        <h2>Color</h2>
-        <div class="color-picker" id="colorPicker">
-          <div class="color-dot none selected" data-color="none" title="None"></div>
-          <div class="color-dot" data-color="#ED4245" style="background:#ED4245"></div>
-          <div class="color-dot" data-color="#57F287" style="background:#57F287"></div>
-          <div class="color-dot" data-color="#5865F2" style="background:#5865F2"></div>
-          <div class="color-dot" data-color="#FEE75C" style="background:#FEE75C"></div>
-          <div class="color-dot" data-color="#9B59B6" style="background:#9B59B6"></div>
-          <div class="color-dot" data-color="#000000" style="background:#000000"></div>
-          <div class="color-dot" data-color="#FFFFFF" style="background:#FFFFFF"></div>
-        </div>
-      </div>
-
-      <!-- Text Blocks -->
-      <div class="section">
-        <h2>Text Blocks</h2>
-        <div id="textBlocks"></div>
-        <button class="btn-primary" onclick="addTextBlock()">➕ Add Text Block</button>
-      </div>
-
-      <!-- Image -->
-      <div class="section">
-        <h2>Image (optional)</h2>
-        <label>Image URL</label>
-        <input type="url" id="imageUrl" placeholder="https://ejemplo.com/imagen.png">
-      </div>
-
-      <!-- Button -->
-      <div class="section">
-        <h2>Button (optional)</h2>
-        <label>Label</label>
-        <input type="text" id="buttonLabel" placeholder="Appeal a moderation" maxlength="80">
-        <label>URL</label>
-        <input type="url" id="buttonUrl" placeholder="https://discord.gg/...">
-      </div>
-
-      <!-- Preview -->
-      <div class="section">
-        <h2>Preview</h2>
-        <div class="preview-area">
-          <div class="preview-container" id="previewContainer">
-            <div class="empty-preview">Escribe algo para ver el preview...</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Send -->
-      <div class="section">
-        <h2>Send to Channel</h2>
-        <label>Channel</label>
-        <select id="channelSelect">
-          <option value="">Loading channels...</option>
-        </select>
-        <button class="btn-success" id="sendBtn" disabled>📤 Send to Discord</button>
-        <p id="sendStatus" class="status"></p>
-      </div>
-
-    </main>
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>
