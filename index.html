@@ -12,13 +12,9 @@
   <div id="loginScreen" class="screen active">
     <div class="login-box">
       <h1>🧱 Adoresa Container Builder</h1>
-      <p class="subtitle">Login with Discord to continue</p>
-      <button id="loginBtn" class="btn-discord">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-        </svg>
-        Login with Discord
-      </button>
+      <p class="subtitle">Enter password to continue</p>
+      <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password">
+      <button id="loginBtn" class="btn-primary">Login</button>
       <p id="loginError" class="error"></p>
     </div>
   </div>
@@ -26,24 +22,79 @@
   <!-- ─── EDITOR SCREEN ──────────────────────────────────── -->
   <div id="editorScreen" class="screen">
     <header class="topbar">
-      <div class="topbar-left">
-        <span class="logo">🧱 Adoresa</span>
-      </div>
+      <span class="logo">🧱 Adoresa Builder</span>
       <div class="topbar-right">
-        <span id="userTag" class="user-tag"></span>
         <button id="logoutBtn" class="btn-secondary">Logout</button>
       </div>
     </header>
 
     <main class="main">
-      <h1>Container Builder</h1>
-      <p class="subtitle">Próximamente: el editor visual completo</p>
 
+      <!-- Title -->
       <div class="section">
-        <h2>Estado</h2>
-        <p>✅ Login funcionando</p>
-        <p>⏳ Editor en construcción</p>
+        <h2>Title</h2>
+        <input type="text" id="title" placeholder="Título del container..." maxlength="100">
       </div>
+
+      <!-- Color -->
+      <div class="section">
+        <h2>Color</h2>
+        <div class="color-picker" id="colorPicker">
+          <div class="color-dot none selected" data-color="none" title="None"></div>
+          <div class="color-dot" data-color="#ED4245" style="background:#ED4245"></div>
+          <div class="color-dot" data-color="#57F287" style="background:#57F287"></div>
+          <div class="color-dot" data-color="#5865F2" style="background:#5865F2"></div>
+          <div class="color-dot" data-color="#FEE75C" style="background:#FEE75C"></div>
+          <div class="color-dot" data-color="#9B59B6" style="background:#9B59B6"></div>
+          <div class="color-dot" data-color="#000000" style="background:#000000"></div>
+          <div class="color-dot" data-color="#FFFFFF" style="background:#FFFFFF"></div>
+        </div>
+      </div>
+
+      <!-- Text Blocks -->
+      <div class="section">
+        <h2>Text Blocks</h2>
+        <div id="textBlocks"></div>
+        <button class="btn-primary" onclick="addTextBlock()">➕ Add Text Block</button>
+      </div>
+
+      <!-- Image -->
+      <div class="section">
+        <h2>Image (optional)</h2>
+        <label>Image URL</label>
+        <input type="url" id="imageUrl" placeholder="https://ejemplo.com/imagen.png">
+      </div>
+
+      <!-- Button -->
+      <div class="section">
+        <h2>Button (optional)</h2>
+        <label>Label</label>
+        <input type="text" id="buttonLabel" placeholder="Appeal a moderation" maxlength="80">
+        <label>URL</label>
+        <input type="url" id="buttonUrl" placeholder="https://discord.gg/...">
+      </div>
+
+      <!-- Preview -->
+      <div class="section">
+        <h2>Preview</h2>
+        <div class="preview-area">
+          <div class="preview-container" id="previewContainer">
+            <div class="empty-preview">Escribe algo para ver el preview...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Send -->
+      <div class="section">
+        <h2>Send to Channel</h2>
+        <label>Channel</label>
+        <select id="channelSelect">
+          <option value="">Loading channels...</option>
+        </select>
+        <button class="btn-success" id="sendBtn" disabled>📤 Send to Discord</button>
+        <p id="sendStatus" class="status"></p>
+      </div>
+
     </main>
   </div>
 
